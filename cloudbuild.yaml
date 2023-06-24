@@ -1,0 +1,46 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/fipe/fipe_fastapi_image:$COMMIT_SHA', '--build-arg', 'APP_NAME=api1', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/fipe/fipe_fastapi_image:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - 'api-1'
+  - '--image'
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/fipe/fipe_fastapi_image:$COMMIT_SHA'
+  - '--region'
+  - 'southamerica-east1'
+  - '--allow-unauthenticated'
+  - '--set-env-vars'
+  - 'APP_NAME=api1'
+  - '--port'
+  - '8000'
+  - '--cpu'
+  - '1'
+  - '--memory'
+  - '256Mi'
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/fipe/fipe_fastapi_image:$COMMIT_SHA', '--build-arg', 'APP_NAME=api2', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/fipe/fipe_fastapi_image:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - 'api-2'
+  - '--image'
+  - 'southamerica-east1-docker.pkg.dev/$PROJECT_ID/fipe/fipe_fastapi_image:$COMMIT_SHA'
+  - '--region'
+  - 'southamerica-east1'
+  - '--allow-unauthenticated'
+  - '--set-env-vars'
+  - 'APP_NAME=api2'
+  - '--port'
+  - '8001'
+  - '--cpu'
+  - '1'
+  - '--memory'
+  - '256Mi'

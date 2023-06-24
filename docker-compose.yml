@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  api1:
+    container_name: api-1
+    build:
+      context: .
+    expose:
+    - 8000
+    ports:
+    - "8000:8000"
+    environment:
+    - APP_NAME=api1
+    volumes:
+    - .:/app
+    depends_on:
+    - redis
+    - mongo-db
+
+  api2:
+    container_name: api-2
+    build:
+      context: .
+    expose:
+    - 8001
+    ports:
+    - "8001:8001"
+    environment:
+    - APP_NAME=api2
+    volumes:
+    - .:/app
+    depends_on:
+    - redis
+    - mongo-db
+
+  consumer:
+    container_name: consumer
+    build:
+      context: .
+    depends_on:
+    - redis
+    - mongo-db
+    command: "python consumer.py"
+
+  redis:
+    image: redislabs/redismod
+    container_name: redis
+    ports:
+    - 6379:6379
+
+  redisinsight:
+    container_name: redis_insight
+    depends_on:
+    - redis
+    image: redislabs/redisinsight:latest
+    ports:
+    - "8003:8001"
+
+  mongo-db:
+    container_name: mongo-db
+    image: mongo:latest
+    hostname: mongo
+    restart: on-failure
+    ports:
+    - "27017:27017"

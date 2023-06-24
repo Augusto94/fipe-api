@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "fipe-api"
+version = "0.1.0"
+description = "Projeto para vaga de desenvolvedor na BexUp"
+authors = ["augusto.lima2 <augusto.lima@birdie.ai>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "0.96.0"
+pymongo = "3.9.0"
+uvicorn = "0.22.0"
+redis = "4.5.5"
+aiohttp = "3.8.4"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "7.3.2"
+httpx = "0.24.1"
+pytest-cov = "4.1.0"
+ipdb = "0.13.9"
+pre-commit = "3.3.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
