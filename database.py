@@ -18,7 +18,10 @@ class FirestoreDatabase:
             item: Um dicionário contendo as informações do veículo a ser salvo.
         """
         doc_ref = self.db.collection(self.collection_name).document(item.get("codigo"))
-        doc_ref.update(item)
+        try:
+            doc_ref.update(item)
+        except Exception:
+            doc_ref.set(item)
 
     def get_veiculo(self, codigo: str) -> Dict[str, str]:
         """

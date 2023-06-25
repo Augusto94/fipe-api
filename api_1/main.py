@@ -1,15 +1,10 @@
-import json
-
 import aiohttp
-import redis
 from fastapi import FastAPI
 
+from api_1.utils import send_to_queue
 from database import db
 
 app = FastAPI()
-
-# Conectar-se ao Redis
-redis_client = redis.Redis(host="redis", port=6379, db=0)
 
 
 @app.get("/")
@@ -38,9 +33,9 @@ async def update_data() -> dict:
             url = url_marcas(categoria=categoria)
             async with session.get(url) as resp:
                 marcas = await resp.json()
-                for marca in marcas:
-                    marca["categoria"] = categoria
-                    redis_client.rpush("marcas-queue", json.dumps(marca))
+                for marca_info in marcas:
+                    marca_info["categoria"] = categoria
+                    await send_to_queue(marca_info)
 
     return {"message": "Marcas enviadas para a fila."}
 
