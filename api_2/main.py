@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from api_2.schema import MarcaInputDTO, VeiculoInputDTO
 from api_2.utils import get_modelos
-from database import get_veiculo, salvar_veiculo
+from database import db
 
 app = FastAPI()
 
@@ -36,7 +36,7 @@ async def add_veiculos(marca: MarcaInputDTO) -> dict:
             "categoria": marca.categoria,
             "observacoes": "",
         }
-        salvar_veiculo(veiculo)
+        db.salvar_veiculo(veiculo)
 
     return {"message": f"Veiculos da marca {marca.nome} salvos com sucesso!"}
 
@@ -58,6 +58,6 @@ async def atualizar_veiculo(veiculo: VeiculoInputDTO) -> dict:
     if veiculo.observacoes is not None:
         item["observacoes"] = veiculo.observacoes
 
-    salvar_veiculo(item)
+    db.salvar_veiculo(item)
 
-    return get_veiculo(veiculo.codigo)
+    return db.get_veiculo(veiculo.codigo)

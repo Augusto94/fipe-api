@@ -19,6 +19,7 @@ EXPOSE 8001
 
 # Argumento para selecionar a aplicação a ser iniciada
 ARG APP_NAME
+ARG GCP_AUTH
 
 # Execute o comando para iniciar a aplicação
 CMD ["bash", "-c", "if [ \"$APP_NAME\" = \"api1\" ]; then uvicorn api_1.main:app --host 0.0.0.0 --port 8000 --reload; elif [ \"$APP_NAME\" = \"api2\" ]; then uvicorn api_2.main:app --host 0.0.0.0 --port 8001 --reload; fi"]

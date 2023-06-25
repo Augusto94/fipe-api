@@ -4,7 +4,7 @@ import aiohttp
 import redis
 from fastapi import FastAPI
 
-from database import listar_marcas, listar_veiculos
+from database import db
 
 app = FastAPI()
 
@@ -52,7 +52,7 @@ async def list_marcas() -> list:
     Returns:
         Uma lista de marcas.
     """
-    return listar_marcas()
+    return db.listar_marcas()
 
 
 @app.get("/veiculos/{marca}")
@@ -65,4 +65,4 @@ async def list_veiculos(marca: str) -> list:
     Returns:
         Uma lista de veículos da marca especificada.
     """
-    return listar_veiculos(marca)
+    return db.listar_veiculos(marca)
