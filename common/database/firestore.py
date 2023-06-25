@@ -17,7 +17,7 @@ class FirestoreDatabase:
             item: Um dicionário contendo as informações do veículo a ser salvo.
             key: Chave do processo. Será usada para criar o ID e atualizar objetos.
         """
-        doc_ref = self.collection.document(item.get(key))
+        doc_ref = self.collection.document(key)
         try:
             doc_ref.update(item)
         except Exception:
