@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api_2.schema import MarcaInputDTO, VeiculoInputDTO
 from api_2.utils import get_modelos
-from database import db
+from common.database import db
+from common.logger import logger
 
 app = FastAPI()
 app.add_middleware(
@@ -35,6 +36,7 @@ async def add_veiculos(marca: MarcaInputDTO) -> dict:
     Returns:
         Uma lista de modelos de veículos adicionados.
     """
+    logger.info(f"Buscando os veículos da marca {marca.nome} da categoria {marca.categoria}.")
     modelos = await get_modelos(marca.codigo, marca.categoria)
     for modelo in modelos:
         veiculo = {
@@ -44,6 +46,9 @@ async def add_veiculos(marca: MarcaInputDTO) -> dict:
             "categoria": marca.categoria,
             "observacoes": "",
         }
+        logger.info(
+            f"Salvando no banco os dados do veículo de modelo {modelo.get('nome')} da marca {marca.nome}."
+        )
         db.salvar_veiculo(veiculo)
 
     return {"message": f"Veiculos da marca {marca.nome} salvos com sucesso!"}
@@ -59,6 +64,7 @@ async def atualizar_veiculo(veiculo: VeiculoInputDTO) -> dict:
     Returns:
         Um dicionário contendo as informações atualizadas do veículo.
     """
+    logger.info(f"Atualizando os dados do veículo de código {veiculo.codigo}.")
     item = {"codigo": veiculo.codigo}
     if veiculo.modelo is not None:
         item["modelo"] = veiculo.modelo

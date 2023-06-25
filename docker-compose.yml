@@ -46,7 +46,7 @@ services:
     depends_on:
     - redis
     - mongo-db
-    command: "python consumer.py"
+    command: "python common/consumer.py"
 
   redis:
     image: redislabs/redismod

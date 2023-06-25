@@ -2,7 +2,8 @@ import aiohttp
 from fastapi import FastAPI
 
 from api_1.utils import send_to_queue
-from database import db
+from common.database import db
+from common.logger import logger
 
 app = FastAPI()
 
@@ -30,10 +31,14 @@ async def update_data() -> dict:
     categorias_list = ["carros", "motos", "caminhoes"]
     async with aiohttp.ClientSession() as session:
         for categoria in categorias_list:
+            logger.info(f"Buscando as marcas na api externa para a categoria {categoria}.")
             url = url_marcas(categoria=categoria)
             async with session.get(url) as resp:
                 marcas = await resp.json()
                 for marca_info in marcas:
+                    logger.info(
+                        f"Enviando os dados do veículo de modelo {marca_info.get('nome')} para fila."
+                    )
                     marca_info["categoria"] = categoria
                     await send_to_queue(marca_info)
 
@@ -47,6 +52,7 @@ async def list_marcas() -> list:
     Returns:
         Uma lista de marcas.
     """
+    logger.info("Listando todas as marcas dos veículos.")
     return db.listar_marcas()
 
 
@@ -60,4 +66,5 @@ async def list_veiculos(marca: str) -> list:
     Returns:
         Uma lista de veículos da marca especificada.
     """
+    logger.info(f"Listando as informações dos veículos da marca {marca}.")
     return db.listar_veiculos(marca)

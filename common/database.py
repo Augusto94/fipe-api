@@ -51,7 +51,7 @@ class FirestoreDatabase:
         marcas = set()
         for doc in docs:
             marcas.add(doc.to_dict().get("marca"))
-        return list(marcas)
+        return sorted(list(marcas))
 
     def listar_veiculos(self, marca: str) -> List[Dict[str, str]]:
         """
@@ -120,7 +120,7 @@ class MongoDatabase:
         Returns:
             Uma lista de marcas de veículos.
         """
-        return self.db[self.collection_name].distinct("marca")
+        return sorted(self.db[self.collection_name].distinct("marca"))
 
     def listar_veiculos(self, marca: str) -> List[Dict[str, str]]:
         """
