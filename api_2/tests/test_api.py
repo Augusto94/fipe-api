@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from api_2.main import app
-from api_2.schema import MarcaInputDTO, VeiculoInputDTO
+from api_2.web.main import app
+from api_2.web.schema import MarcaInputDTO, VeiculoInputDTO
 
 
 @pytest.fixture(scope="module")

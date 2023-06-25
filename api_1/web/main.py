@@ -1,8 +1,10 @@
-import aiohttp
 from fastapi import FastAPI
 
-from api_1.utils import send_to_queue
-from common.database import db
+from api_1.services.marca_service import (
+    atualizar_base_service,
+    list_marcas_service,
+    list_veiculos_service,
+)
 from common.logger import logger
 
 app = FastAPI()
@@ -27,21 +29,7 @@ async def update_data() -> dict:
     Returns:
         Um dicionário com uma mensagem informando que as marcas foram enviadas para a fila.
     """
-    url_marcas = "https://parallelum.com.br/fipe/api/v1/{categoria}/marcas".format
-    categorias_list = ["carros", "motos", "caminhoes"]
-    async with aiohttp.ClientSession() as session:
-        for categoria in categorias_list:
-            logger.info(f"Buscando as marcas na api externa para a categoria {categoria}.")
-            url = url_marcas(categoria=categoria)
-            async with session.get(url) as resp:
-                marcas = await resp.json()
-                for marca_info in marcas:
-                    logger.info(
-                        f"Enviando os dados do veículo de modelo {marca_info.get('nome')} para fila."
-                    )
-                    marca_info["categoria"] = categoria
-                    await send_to_queue(marca_info)
-
+    await atualizar_base_service()
     return {"message": "Marcas enviadas para a fila."}
 
 
@@ -53,7 +41,7 @@ async def list_marcas() -> list:
         Uma lista de marcas.
     """
     logger.info("Listando todas as marcas dos veículos.")
-    return db.listar_marcas()
+    return await list_marcas_service()
 
 
 @app.get("/veiculos/{marca}")
@@ -67,4 +55,4 @@ async def list_veiculos(marca: str) -> list:
         Uma lista de veículos da marca especificada.
     """
     logger.info(f"Listando as informações dos veículos da marca {marca}.")
-    return db.listar_veiculos(marca)
+    return await list_veiculos_service(marca)

@@ -5,7 +5,7 @@ services:
     container_name: api-1
     build:
       context: .
-    command: ["uvicorn", "api_1.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command: ["uvicorn", "api_1.web.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     expose:
     - 8000
     ports:
@@ -24,7 +24,7 @@ services:
     container_name: api-2
     build:
       context: .
-    command: ["uvicorn", "api_2.main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
+    command: ["uvicorn", "api_2.web.main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]
     expose:
     - 8001
     ports:

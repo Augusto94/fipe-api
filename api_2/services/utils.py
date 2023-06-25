@@ -1,5 +1,7 @@
 import aiohttp
 
+from common.constants import FIPE_API_BASE_URL
+
 
 async def get_modelos(cod_marca: str, categoria: str) -> list:
     """Obtém os modelos de veículos de uma determinada marca e categoria.
@@ -12,7 +14,7 @@ async def get_modelos(cod_marca: str, categoria: str) -> list:
         Uma lista de modelos de veículos.
     """
     async with aiohttp.ClientSession() as session:
-        url = f"https://parallelum.com.br/fipe/api/v1/{categoria}/marcas/{cod_marca}/modelos"
+        url = f"{FIPE_API_BASE_URL}/{categoria}/marcas/{cod_marca}/modelos"
         async with session.get(url) as resp:
             response = await resp.json()
             return response.get("modelos")

@@ -22,4 +22,4 @@ ARG APP_NAME
 ARG GCP_AUTH
 
 # Execute o comando para iniciar a aplicação
-CMD ["bash", "-c", "if [ \"$APP_NAME\" = \"api1\" ]; then uvicorn api_1.main:app --host 0.0.0.0 --port 8000; elif [ \"$APP_NAME\" = \"api2\" ]; then uvicorn api_2.main:app --host 0.0.0.0 --port 8001; fi"]
+CMD ["bash", "-c", "if [ \"$APP_NAME\" = \"api1\" ]; then uvicorn api_1.web.main:app --host 0.0.0.0 --port 8000; elif [ \"$APP_NAME\" = \"api2\" ]; then uvicorn api_2.web.main:app --host 0.0.0.0 --port 8001; fi"]

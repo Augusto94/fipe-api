@@ -7,7 +7,7 @@ class MarcaInputDTO(BaseModel):
     categoria: str
 
 
-class VeiculoInputDTO(BaseModel):
+class VeiculoUpdateDTO(BaseModel):
     codigo: str
     modelo: str | None
     observacoes: str | None

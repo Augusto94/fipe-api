@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api_2.schema import MarcaInputDTO, VeiculoInputDTO
-from api_2.utils import get_modelos
-from common.database import db
+from api_2.services.veiculo_service import (
+    adicionar_veiculos_service,
+    atualizar_veiculo_service,
+)
+from api_2.web.schema import MarcaInputDTO, VeiculoUpdateDTO
 from common.logger import logger
 
 app = FastAPI()
@@ -36,26 +38,16 @@ async def add_veiculos(marca: MarcaInputDTO) -> dict:
     Returns:
         Uma lista de modelos de veículos adicionados.
     """
-    logger.info(f"Buscando os veículos da marca {marca.nome} da categoria {marca.categoria}.")
-    modelos = await get_modelos(marca.codigo, marca.categoria)
-    for modelo in modelos:
-        veiculo = {
-            "codigo": str(modelo.get("codigo")),
-            "marca": marca.nome,
-            "modelo": modelo.get("nome"),
-            "categoria": marca.categoria,
-            "observacoes": "",
-        }
-        logger.info(
-            f"Salvando no banco os dados do veículo de modelo {modelo.get('nome')} da marca {marca.nome}."
-        )
-        db.salvar_veiculo(veiculo)
+    logger.info(
+        f"Buscando e salvando no banco os veículos da marca {marca.nome} da categoria {marca.categoria}."
+    )
+    await adicionar_veiculos_service(marca.codigo, marca.nome, marca.categoria)
 
     return {"message": f"Veiculos da marca {marca.nome} salvos com sucesso!"}
 
 
 @app.put("/veiculo")
-async def atualizar_veiculo(veiculo: VeiculoInputDTO) -> dict:
+async def atualizar_veiculo(veiculo: VeiculoUpdateDTO) -> dict:
     """Atualiza as informações de um veículo.
 
     Args:
@@ -65,13 +57,4 @@ async def atualizar_veiculo(veiculo: VeiculoInputDTO) -> dict:
         Um dicionário contendo as informações atualizadas do veículo.
     """
     logger.info(f"Atualizando os dados do veículo de código {veiculo.codigo}.")
-    item = {"codigo": veiculo.codigo}
-    if veiculo.modelo is not None:
-        item["modelo"] = veiculo.modelo
-
-    if veiculo.observacoes is not None:
-        item["observacoes"] = veiculo.observacoes
-
-    db.salvar_veiculo(item)
-
-    return db.get_veiculo(veiculo.codigo)
+    return await atualizar_veiculo_service(veiculo.codigo, veiculo.modelo, veiculo.observacoes)
