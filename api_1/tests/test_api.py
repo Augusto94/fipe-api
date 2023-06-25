@@ -1,12 +1,20 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from api_1.main import app
+from api_1.main import app as api_1
+from api_2.main import app as api_2
+from api_2.schema import MarcaInputDTO
 
 
 @pytest.fixture(scope="module")
 def test_client():
-    with TestClient(app) as client:
+    with TestClient(api_1) as client:
+        yield client
+
+
+@pytest.fixture(scope="module")
+def test_client_api_2():
+    with TestClient(api_2) as client:
         yield client
 
 
@@ -29,10 +37,13 @@ def test_list_marcas(test_client):
     assert isinstance(response.json(), list)
 
 
-def test_list_veiculos(test_client):
-    # Primeiro, atualize os dados para garantir que haja marcas disponíveis
-    response = test_client.get("/atualizar-dados")
+def test_list_veiculos(test_client, test_client_api_2):
+    # Primeiro, crie os veiculos de uma marca específica
+    marca = MarcaInputDTO(codigo="5", nome="Alfa Romeo", categoria="carros")
+    response = test_client_api_2.post("/veiculos", json=marca.dict())
+
     assert response.status_code == 200
+    assert response.json() == {"message": "Veiculos da marca Alfa Romeo salvos com sucesso!"}
 
     # Obtenha a lista de marcas disponíveis
     response = test_client.get("/marcas/")

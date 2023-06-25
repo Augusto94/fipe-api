@@ -18,24 +18,24 @@ def test_health_check(test_client):
 
 
 def test_add_veiculos(test_client):
-    marca = MarcaInputDTO(codigo="123", nome="Marca 1", categoria="carros")
+    marca = MarcaInputDTO(codigo="5", nome="Asia Motors", categoria="carros")
     response = test_client.post("/veiculos", json=marca.dict())
 
     assert response.status_code == 200
-    assert response.json() == {"message": "Veiculos da marca Marca 1 salvos com sucesso!"}
+    assert response.json() == {"message": "Veiculos da marca Asia Motors salvos com sucesso!"}
 
 
 def test_atualizar_veiculo(test_client):
     veiculo = VeiculoInputDTO(
-        codigo="1", modelo="Integra GS 1.8 Turbo", observacoes="Novas Observações"
+        codigo="24", modelo="AM-825 Luxo 4.0 Diesel", observacoes="Novas Observações Teste"
     )
     response = test_client.put("/veiculo", json=veiculo.dict())
 
     assert response.status_code == 200
     assert response.json() == {
-        "codigo": "1",
-        "marca": "Acura",
-        "modelo": "Integra GS 1.8 Turbo",
+        "codigo": "24",
+        "marca": "Asia Motors",
+        "modelo": "AM-825 Luxo 4.0 Diesel",
         "categoria": "carros",
-        "observacoes": "Novas Observações",
+        "observacoes": "Novas Observações Teste",
     }
