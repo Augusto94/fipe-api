@@ -87,7 +87,6 @@ As API's foram criadas utilizando o framework FastAPI.
 1. API-1: Possui os endpoints para realizar a carga inicial dos dados e ler as marcas e os dados dos veículos;
 2. API-2: Possui os endpoints para criação e atualização dos dados. 
 
-
 De forma simples, a API-1 é utilizada para leitura dos dados e a API-2 para criação e edição. 
 
 A fonte dos dados utilizada para popular a nossa base de dados se encontra em: `https://deividfortuna.github.io/fipe/`.
@@ -96,6 +95,14 @@ Os veículos podem ser `carros, motos ou caminhoes`. A API-1 consulta as marcas 
 
 Em posse dos resultados, para cada marca, a API-1 envia as informações de `codigo, nome e categoria` para uma fila e
 de forma assíncrona as mensagens que chegam na fila realizam uma request para o endpoint de criação de veículo na API-2. 
+
+```
+Observação: Ao fazer uma request para o endpoint GET `/atualizar-dados` a seguinte mensagem é retornada:
+{"message": "Marcas enviadas para a fila."}. Nesse momento a API-2 estará processando em background as
+requests recebidas e salvando os dados no banco. Para finalizar a ingestão de toda base leva em média
+2 minutos e então você consultar todos os veículos da base. Antes disso a consulta poderá retornar dados
+incompletos.
+```
 
 Agora na API-2, o endpoint de criação de veículos recebe as informações que foram enviadas para fila pela API-1 e em posse
 dessas informações das marcas, realiza uma request para a api externa para consultar os modelos de veículos daquela marca
