@@ -7,6 +7,12 @@ Para os usuários as principais funcionalidades são:
 3. Listar todos oos modelos de veículos de uma marca específica;
 4. Adicionar/editar os campos `modelo e observações` de um veículo.
 
+#### *Observação*
+```
+Quando a pessoa responsável pela avaliação for testar a aplicação, o banco de dados estará limpo e será
+necessário disparar a carga inicial dos dados para popular o banco. Detalhes mais abaixo.
+```
+
 
 ## Execução utilizando a aplicação em produção hospedada no GCP
 
