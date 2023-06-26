@@ -229,7 +229,7 @@ make test
  - Melhorar os teste e adicionar sua execução como um step cloud build para subir para produção somente códigos que passam nos testes.
  - Fazer o deploy da aplicação usando kubernetes possibilidando uma maior gerenciamento, escalabilidade, resiliência e vários outros benefícios do kubernetes.
  - Adicionar algumas verificações nas API's para evitar respostas inesperadas. Melhorar os testes pode ajudar nesse ponto.
- - Utilizar a mesma tecnologias e ferramentas independente do ambiente.
+ - Utilizar a mesmas tecnologias e ferramentas independente do ambiente.
 
 
 ## Contato
