@@ -4,7 +4,7 @@ Sistema para consulta de modelos de veículos de carros presentes na tabela FIPE
 Para os usuários as principais funcionalidades são:
 1. Disparar a carga inicial ou atualização dos dados;
 2. Listar as marcas de todos os veículos;
-3. Listar todos oos modelos de veículos de uma marca específica;
+3. Listar todos os modelos de veículos de uma marca específica;
 4. Adicionar/editar os campos `modelo e observações` de um veículo.
 
 #### *Observação*
@@ -22,7 +22,7 @@ necessário disparar a carga inicial dos dados para popular o banco. Detalhes ma
 O deploy da aplicação em produção foi feita usando os serviços do Cloud Build e Cloud Run. 
 
 De forma bem resumida, o Cloud Build foi configurado para ser executado sempre que houver uma modificação na branch `master` do
-repositório no github. Como esta descrito no arquivo `cloudbuild.yaml` na raiz do projeto, é criada um
+repositório no github. Como esta descrito no arquivo `cloudbuild.yaml` na raiz do projeto, é criada uma
 imagem docker para API-1 e outra para API-2 e são armazenadas no serviço `Artifact Registry`. 
 Após criar as imagens o Cloud Build realiza o deploy de cada API no serviço do Cloud Run passando as configurações correspondentes.
 Dessa forma, temos a API-1 e API-2 sendo executas em instâncias do google e disponíveis para acesso por qualquer pessoa. 
@@ -71,7 +71,7 @@ Certifique-se de ter instalado os seguintes requisitos antes de executar o proje
 
 Nesse momento as API's estarão disponíveis em `http://localhost:8000/` e `http://localhost:8001/`.
 
-Localmente são utilizadas outras ferramentas para armazenamento dos dados e o sistema de filas e comunicação entre as API's. 
+Localmente são utilizadas outras ferramentas para armazenamento dos dados e o sistema de filas para comunicação entre as API's. 
 
 Em produção o banco de dados utilizado é o `Firestore`. Já no ambiente de desenvolvimento o banco escolhido foi o `MongoDB`. 
 Já o sistema de filas adotado foi o `Redis` ao invés do `Cloud Tasks`. Onde a API-1 envia mensagens contendo as informações das marcas para uma fila no redis e
@@ -90,9 +90,9 @@ As API's foram criadas utilizando o framework FastAPI.
 
 De forma simples, a API-1 é utilizada para leitura dos dados e a API-2 para criação e edição. 
 
-A fonte dos dados utilizadas para popular a nossa base de dados se encontra em: `https://deividfortuna.github.io/fipe/`.
-Basicamente, ao chamado o endpoint  GET `/atualizar-dados` a API-1 realiza uma request na api externa para buscar a lista das marcas dos veículos na tabela FIPE.
-Os veículos podem ser `carros, motos ou caminhoes`. A API-1 consulta as marcas nessas 2 categorias. 
+A fonte dos dados utilizada para popular a nossa base de dados se encontra em: `https://deividfortuna.github.io/fipe/`.
+Basicamente, ao chamar o endpoint  GET `/atualizar-dados` a API-1 realiza uma request na api externa para buscar a lista das marcas dos veículos na tabela FIPE.
+Os veículos podem ser `carros, motos ou caminhoes`. A API-1 consulta as marcas nessas 3 categorias. 
 
 Em posse dos resultados, para cada marca, a API-1 envia as informações de `codigo, nome e categoria` para uma fila e
 de forma assíncrona as mensagens que chegam na fila realizam uma request para o endpoint de criação de veículo na API-2. 
@@ -184,11 +184,11 @@ Por se tratar de 2 API's FastAPI que compartilham de vários recursos, foi tomad
 repetições de código e/ou arquivos. 
 
 Dockerfile, docker-compose.yml, dependências pelo poetry, cloudbuild.yaml, entre outros recursos, são os mesmos
-para as 2 API's. Database, logger, constant, etc, foram inseridos em uma pasta chamada `common` e podem ser facilmente
-acessada por ambas API's. 
+para as 2 API's. Database, logger, constants, etc, foram inseridos em uma pasta chamada `common` e podem ser facilmente
+acessados por ambas API's. 
 
 Os projetos FastAPI foram organizados utilizando o padrão service-repository onde ficam bem definidas as responsabilidades
-de lógica de negócio (service) e comunicação e manipulação no banco de dados (repository) possibilidando possa crescer 
+de lógica de negócio (service) e comunicação e manipulação no banco de dados (repository) possibilitando escalar 
 de forma organizada. 
 
 Foi feito uso do pre-commit para padronização e garantir uma qualidade no código. Também foi utilizado type hint e escrita de
@@ -210,7 +210,7 @@ make test
 
 ## Observações e análise do projeto
 
-#### *Stask das principais tecnologias/serviços utilizados*
+#### *Stack das principais tecnologias/serviços utilizados*
  - FastAPI
  - Cloud Build
  - Cloud Run
@@ -226,8 +226,8 @@ make test
 
 #### Possíveis melhorias
 
- - Melhorar os teste e adicionar sua execução como um step cloud build para subir para produção somente códigos que passam nos testes.
- - Fazer o deploy da aplicação usando kubernetes possibilidando uma maior gerenciamento, escalabilidade, resiliência e vários outros benefícios do kubernetes.
+ - Melhorar os teste e adicionar sua execução como um step do cloud build para fazer o deploy somente códigos que passam nos testes.
+ - Fazer o deploy da aplicação usando kubernetes possibilitando uma maior gerenciamento, escalabilidade, resiliência e vários outros benefícios do kubernetes.
  - Adicionar algumas verificações nas API's para evitar respostas inesperadas. Melhorar os testes pode ajudar nesse ponto.
  - Utilizar a mesmas tecnologias e ferramentas independente do ambiente.
 
