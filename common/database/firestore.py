@@ -39,6 +39,7 @@ class FirestoreDatabase:
         doc = doc_ref.get()
         if doc.exists:
             return doc.to_dict()
+
         return {}
 
     def list_by_field(self, field: str) -> List[str]:
@@ -51,7 +52,9 @@ class FirestoreDatabase:
         docs = self.collection.stream()
         marcas = set()
         for doc in docs:
-            marcas.add(doc.to_dict().get(field))
+            if doc.to_dict().get(field):
+                marcas.add(doc.to_dict().get(field))
+
         return sorted(list(marcas))
 
     def list_items(self, field: str, value: str) -> List[Dict[str, str]]:
