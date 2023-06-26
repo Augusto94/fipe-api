@@ -16,8 +16,8 @@ necessário disparar a carga inicial dos dados para popular o banco. Detalhes ma
 
 ## Execução utilizando a aplicação em produção hospedada no GCP
 
- - API-1: `https://api-1-6cu7fqvgrq-rj.a.run.app/docs/`
- - API-2: `https://api-2-6cu7fqvgrq-rj.a.run.app/docs/` 
+ - API-1: [https://api-1-6cu7fqvgrq-rj.a.run.app/docs/](https://api-1-6cu7fqvgrq-rj.a.run.app/docs/)
+ - API-2: [https://api-2-6cu7fqvgrq-rj.a.run.app/docs/](https://api-2-6cu7fqvgrq-rj.a.run.app/docs/)
 
 O deploy da aplicação em produção foi feita usando os serviços do Cloud Build e Cloud Run. 
 
